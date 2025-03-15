@@ -1,120 +1,68 @@
 #include <iostream>
-#include <queue>
-#include <string>
 #include <vector>
-#include <unordered_map>
-
-#include "Process.h"
+#include <random>
+#include <algorithm>
+#include <fstream>
+#include <cmath>
 
 #define uint unsigned int
 
-
 using namespace std;
 
-class Proces {
+
+class ProcessGenerator {
 private:
-	uint id, czasTrwania, priorytet, czasDodania, czasZakonczenia, czasOczekiwania;
+	random_device rd;
+	mt19937 gen;
 
 public:
-	Proces(uint id, uint czasTrwania, uint priorytet, uint czasDodania, uint czasZakonczenia) {
-		this->id = id;
-		this->czasTrwania = czasTrwania;
-		this->priorytet = priorytet;
-		this->czasDodania = czasDodania;
-		this->czasZakonczenia = czasZakonczenia;
-		czasOczekiwania = 0;
+	ProcessGenerator()
+		: gen(rd())
+	{}
+	~ProcessGenerator() {}
+
+	double gaussian(double mean, double stddev) {
+		normal_distribution<double> dist(mean, stddev);
+		return dist(gen);
 	}
 
-	~Proces() {}
-
-	inline uint getId() const {
-		return id;
-	}
-	inline uint getCzasTrwania() const {
-		return czasTrwania;
-	}
-	inline uint getPriorytet() const {
-		return priorytet;
-	}
-	inline uint getCzasDodania() const {
-		return czasDodania;
-	}
-	inline uint getCzasZakonczenia() const {
-		return czasZakonczenia;
-	}
-	inline uint getCzasOczekiwania() const {
-		return czasOczekiwania;
+	double linear(double min, double max) {
+		uniform_real_distribution<double> dist(0.0, 1.0);
+		double r = dist(gen);
+		return min + (max - min) * r * r;
 	}
 
-	inline string toString() const {
-		return "Proces " + to_string(id) + ": czas( " + to_string(czasDodania) + "; " + to_string(czasZakonczenia) + " )";
+	double inverseLinear(double min, double max) {
+		uniform_real_distribution<double> dist(0.0, 1.0);
+		double r = dist(gen);
+		return min + (max - min) * sqrt(r);
 	}
 
-};
-
-class ComparatorStrategy {
-public:
-	virtual bool operator()(Proces& a, Proces& b) const = 0;
-	virtual ~ComparatorStrategy() = default;
-};
-
-class ArrivalTimeComparator : public ComparatorStrategy {
-public:
-	bool operator() (Proces& a, Proces& b) const override {
-		return a.getCzasDodania() < b.getCzasDodania();
-	}
-};
-
-class BurstTimeComparator : public ComparatorStrategy {
-public:
-	bool operator() (Proces& a, Proces& b) const override{
-		return a.getCzasTrwania() < b.getCzasTrwania();
-	}
-};
-
-class CPU {
-private:
-	uint time;
-	vector<Proces> terminatedProcesess;
-	priority_queue<Proces> pq;
-	ComparatorStrategy* comparator;
-	uint quant;
-
-public:
-	CPU(vector<Proces>& vec, uint quant) {
-		
-	}
-
-	~CPU() {}
-
-	void setStrategy(ComparatorStrategy* comp) {
-		comparator = comp;
-	}
-
-	void restart(priority_queue<Proces> pq, uint quant) {
-		time = 0;
-		terminatedProcesess.clear();
-		this->pq = pq;
-		this->quant = quant;
-	}
-
-	void 
-
-	void simulate() {
-		while (!pq.empty()) {
-			//TODO: zaimplementowac dzialanie algorytmu
+	double customDistribution(int min, int max) {
+		vector<int> numbers;
+		for (int i = min; i <= max; i++) {
+			numbers.push_back(i);
+			if (i % 2 == 0)numbers.push_back(i);
 		}
+		uniform_int_distribution<int> dist(0, numbers.size() - 1);
+		return numbers[dist(gen)];
 	}
-
 };
-
 
 
 int main() {
-	ArrivalTimeComparator arrivalTimeComparator;
-	BurstTimeComparator burstTimeComparator;
+	ProcessGenerator rng;
 
-
+	vector<double> gaussData, linearData, inverseData, customData;
+	
+	size_t sampleSize = 1000;
+	for (size_t i = 0; i < sampleSize; i++)
+	{
+		gaussData.push_back(rng.gaussian(50, 15));
+		linearData.push_back(rng.linear(0, 100));
+		inverseData.push_back(rng.inverseLinear(0, 100));
+		customData.push_back(rng.customDistribution(0, 10));
+	}
 
 
 
