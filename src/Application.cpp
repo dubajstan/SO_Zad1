@@ -72,39 +72,10 @@ public:
 	}
 };
 
+// rozne sposoby implementowanie funkcji operate
+
 class CPU {
 private:
-	uint time;
-	vector<Proces> terminatedProcesess;
-	priority_queue<Proces> pq;
-	ComparatorStrategy* comparator;
-	uint quant;
-
-public:
-	CPU(vector<Proces>& vec, uint quant) {
-		
-	}
-
-	~CPU() {}
-
-	void setStrategy(ComparatorStrategy* comp) {
-		comparator = comp;
-	}
-
-	void restart(priority_queue<Proces> pq, uint quant) {
-		time = 0;
-		terminatedProcesess.clear();
-		this->pq = pq;
-		this->quant = quant;
-	}
-
-	void 
-
-	void simulate() {
-		while (!pq.empty()) {
-			//TODO: zaimplementowac dzialanie algorytmu
-		}
-	}
 
 };
 
