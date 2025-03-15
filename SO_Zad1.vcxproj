@@ -129,6 +129,12 @@
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Wyniki.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ProcesGenerator.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
