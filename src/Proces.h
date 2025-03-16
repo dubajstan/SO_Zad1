@@ -2,7 +2,7 @@
 
 #include <string>
 
-#define uint unsigned int
+#define uint size_t
 
 class Proces {
 private:
@@ -11,10 +11,11 @@ private:
 	uint czasZakonczenia;
 	uint priorytet;
 	uint czasTrwania;
+	uint czasProgres;
 
 public:
 	Proces(uint id, uint priorytet, uint czasTrwania, uint czasDodania)
-		: id(id), priorytet(priorytet), czasTrwania(czasTrwania), czasDodania(czasDodania), czasZakonczenia(0)
+		: id(id), priorytet(priorytet), czasTrwania(czasTrwania), czasDodania(czasDodania), czasZakonczenia(0), czasProgres(0)
 	{ }
 
 	~Proces() {}
@@ -34,9 +35,20 @@ public:
 	uint getCzasTrwania() const {
 		return czasTrwania;
 	}
+	uint getCzasProgres() const {
+		return czasProgres;
+	}
 	
 	void setCzasZakonczenia(uint czasZakonczenia) {
 		this->czasZakonczenia = czasZakonczenia;
+	}
+
+	void setCzasProgres(uint czasProgres) {
+		this->czasProgres = czasProgres;
+	}
+
+	void czasProgresIncrement() {
+		czasProgres++;
 	}
 
 	std::string toString() const {

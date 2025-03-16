@@ -11,7 +11,7 @@
 
 #include "Proces.h"
 
-#define uint unsigned int
+#define uint size_t
 
 class DistributionStrategy {
 public:
@@ -131,7 +131,7 @@ public:
 
     ~ProcesGenerator() {}
 
-    std::mt19937 getEngine() {
+    std::mt19937 getEngine() const {
         return engine;
     }
     /*

@@ -8,7 +8,7 @@
 
 #include "CPU.h"
 
-void print(const std::vector<std::unique_ptr<Proces>>& vec) {
+void static print(const std::vector<std::unique_ptr<Proces>>& vec) {
 	for (const auto& p : vec) {
 		std::cout << p->toString();
 	}
@@ -27,17 +27,22 @@ int main() {
 	}
 	file.close();
 	*/
-	const uint ilosc = 1000;
+	const uint ilosc = 10;
 	ProcesGenerator rng;
 	// tutaj moge za pomoca funkcji w rng zmieniac strategie
 	std::vector<Proces> vec = rng.generujProcesy({0.5, 0.3, 0.2}, ilosc);
 
 	std::ofstream file("data.txt");
-	for (auto obj : vec) {
+	for (Proces obj : vec) {
 		file << obj.getPriorytet() << " " << obj.getCzasTrwania() << " " << obj.getCzasDodania() << std::endl;
 	}
 
+	CPU cpu;
+	cpu.simulate(vec);
 
+	for (Proces p : vec) {
+		std::cout << p.getCzasZakonczenia() << std::endl;
+	}
 	
 	return 0;
 
