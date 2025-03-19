@@ -154,7 +154,7 @@ public:
         return static_cast<uint>(dist(engine) + 1);
     }
 
-    std::vector<Proces> generujProcesy(const std::vector<double>& p, const size_t& count) {
+    std::vector<Proces> generujProcesy(const std::vector<double>& p, uint czasTrwaniaMin, uint czasTrwaniaMax, uint czasDodaniaMin, uint czasDodaniaMax, const size_t& count) {
         std::vector<Proces> vec;
         vec.reserve(count);
 
@@ -170,7 +170,7 @@ public:
         }
 
         for (size_t i = 1; i <= count; i++) {
-            vec.emplace_back(i, discrete(p[0], p[1], p[2]), czasTrwaniaStrategy->generate(50, 1), czasDodaniaStrategy->generate(10000,1));
+            vec.emplace_back(i, discrete(p[0], p[1], p[2]), czasTrwaniaStrategy->generate(czasTrwaniaMax, czasTrwaniaMin), czasDodaniaStrategy->generate(czasDodaniaMax,czasTrwaniaMin));
         }
 
         return vec;

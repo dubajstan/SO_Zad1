@@ -8,42 +8,65 @@
 
 #include "CPU.h"
 
-void static print(const std::vector<std::unique_ptr<Proces>>& vec) {
-	for (const auto& p : vec) {
-		std::cout << p->toString();
+void makeTestStats(Stats& s, const std::string& filepath) {
+	std::ofstream file(filepath);
+
+	file << s.sredniTAT << " " << s.sredniWT << "\n";
+
+	for (Proces& p : s.vec) {
+		file << p.getId() << " " <<
+			p.getCzasDodania() << " " <<
+			p.getCzasZakonczenia() << " " <<
+			p.getPriorytet() << " " <<
+			p.getCzasTrwania() << " " <<
+			p.getTAT() << " " << // 6 statystyka
+			p.getWT() << "\n"; //7 statystyka
 	}
+
+	file.close();
 }
 
 int main() {
-	/*
+	//-----------------------------------------------------GENEROWANIE I WYPISYWANIE DO STATYSTYK
+
+	//const uint ilosc_Procesow = 100000;
+	const uint ilosc_Procesow = 10000;
 	ProcesGenerator rng;
+	std::vector<Proces> vec = rng.generujProcesy({ 0.5, 0.4, 0.1 }, 1, 20, 1, 50, ilosc_Procesow);
+	
 	std::ofstream file("data.txt");
 
-
-
-	size_t sampleSize = 10000;
-	for (size_t i = 0; i < sampleSize; i++) {
-		file << rng.gaussian(50) << " " << rng.linear(50, 1) << " " << rng.inverseLinear(50) << "\n";
-	}
-	file.close();
-	*/
-	const uint ilosc = 10;
-	ProcesGenerator rng;
-	// tutaj moge za pomoca funkcji w rng zmieniac strategie
-	std::vector<Proces> vec = rng.generujProcesy({0.5, 0.3, 0.2}, ilosc);
-
-	std::ofstream file("data.txt");
 	for (Proces obj : vec) {
 		file << obj.getPriorytet() << " " << obj.getCzasTrwania() << " " << obj.getCzasDodania() << std::endl;
 	}
+	file.close();
 
-	CPU cpu;
-	cpu.simulate(vec);
+	//-----------------------------------------------------SORTOWANIE WZGLEDEM KOLEJNOSCI POJAWIANIA SIE
 
-	for (Proces p : vec) {
-		std::cout << p.getCzasZakonczenia() << std::endl;
-	}
+	std::sort(vec.begin(), vec.end(), [](const Proces& a, const Proces& b) {return a.getCzasDodania() < b.getCzasDodania(); });
+
+	//-----------------------------------------------------WYWOLYWANIE SYMULACJI FCFS
+
+	CPU cpu(0);
+	Stats s1 = cpu.FCFS(vec);
+
+	makeTestStats(s1, "FCFS.txt");
+
+	//-----------------------------------------------------WYWOLYWANIE SYMULACJI SJF
+
+	Stats s2 = cpu.SJF(vec);
+
+	makeTestStats(s2, "SJF.txt");
+
+	//------------------------------------------------------WYWOLYWANIE SYMULACJI SJF z wywlaszczaniem
+
+	//Stats s3 = cpu.SJFW(vec);
+
+	//makeTestStats(s3, "SJFW.txt");
+
+	// testuj:
+	// - algorytm
+	// - 
 	
 	return 0;
-
 }
